@@ -36,11 +36,11 @@ async def admin_read_db(message : types.Message):
 
 #@dp.message_handler (command ='Загрузить', state=None)
 async def admin_start(message : types.Message):
-	if message.from_user.id==ID: 
-		await bot.send_message(message.from_user.id, 'Запущена процедура записи Вопроса.')
-		print('Отправлена команда Загрузить от пользователя', message.from_user.username)
-		await FSMAdmin.photo.set()
-		await message.reply('Загрузи фото')
+	#if message.from_user.id==ID: 
+	await bot.send_message(message.from_user.id, 'Запущена процедура записи Вопроса.')
+	print('Отправлена команда Загрузить от пользователя', message.from_user.username)
+	await FSMAdmin.photo.set()
+	await message.reply('Загрузи фото')
 
 	#Ответ от админа
 #@dp.message_handler(content_types=['photo'], state=FSAdmin.photo)
@@ -80,13 +80,13 @@ async def load_ilink(message: types.Message, state: FSMContext):
 
 #Выход из состояния
 async def cancel_handler(message:types.Message,state:FSMContext):
-	if message.from_user.id==ID: 
-		current_state =await state.get_state()
-		if current_state is None:
-			return
-		await state.finish()
-		await message.reply('ОК')
-		print('Загрузка отменена пользователем ', message.from_user.username)
+	#if message.from_user.id==ID: 
+	current_state =await state.get_state()
+	if current_state is None:
+		return
+	await state.finish()
+	await message.reply('ОК')
+	print('Загрузка отменена пользователем ', message.from_user.username)
 
 
 
@@ -95,6 +95,7 @@ def register_handlers_admin(dp : Dispatcher):
 	dp.register_message_handler(make_changes_command, commands=['moderator'], is_chat_admin=True)
 	dp.register_message_handler(cancel_handler, state="*", commands=['отмена'])
 	dp.register_message_handler(cancel_handler, Text(equals='отмена', ignore_case=True), state="*")
+
 	dp.register_message_handler(admin_start, commands=['load','adm'])
 	dp.register_message_handler(admin_read_db, commands=['read'])
 	dp.register_message_handler(load_photo, content_types=['photo'], state=FSMAdmin.photo)
